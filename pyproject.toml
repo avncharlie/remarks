@@ -19,12 +19,12 @@ include = ["remarks/assets/templates/*.template"]
 [tool.poetry.dependencies]
 python = "^3.12"
 PyMuPDF = "^1.23.5"
-rmscene = { git = "https://github.com/scrybbling-together/rmscene.git", branch = "main" }
+rmscene = { git = "https://github.com/avncharlie/rmscene-scrybbling.git", branch = "main" }
 pyyaml = "^6.0.1"
 parsita = "^2.1.1"
 numpy = "^2.2.1"
 flask = "^3.1.0"
-rmc = { git = "https://github.com/scrybbling-together/rmc.git", branch = "main" }
+rmc = { git = "https://github.com/avncharlie/rmc-scrybbling.git", branch = "main" }
 sentry-sdk = { version="^2.25.0", extras=["flask"] }
 gunicorn = "23.0.0"
 
