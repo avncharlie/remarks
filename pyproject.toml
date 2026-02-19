@@ -19,7 +19,7 @@ include = ["remarks/assets/templates/*.template"]
 [tool.poetry.dependencies]
 python = "^3.12"
 PyMuPDF = "^1.23.5"
-rmscene = { git = "https://github.com/avncharlie/rmscene-scrybbling.git", branch = "main" }
+rmscene = { git = "https://github.com/Scrybbling-together/rmscene.git", branch = "main" }
 pyyaml = "^6.0.1"
 parsita = "^2.1.1"
 numpy = "^2.2.1"
