@@ -15,7 +15,7 @@ from rmscene import read_tree
 from rmc.exporters.svg import (
     build_anchor_pos, get_bounding_box,
     SVG_HEADER, draw_text, draw_group,
-    rmc_config,
+    resolve_asset_dir, rmc_config,
 )
 from rmc.exporters.pdf import _svg_to_pdf
 
@@ -52,7 +52,9 @@ def render_page_with_template(
             tree = read_tree(f)
 
         # Generate SVG content
-        svg_content = render_tree_with_template(tree, template_data)
+        svg_content = render_tree_with_template(
+            tree, template_data, assets=resolve_asset_dir(rm_path)
+        )
 
         if output_format == "svg":
             # Write SVG directly
@@ -75,7 +77,8 @@ def render_page_with_template(
 
 def render_tree_with_template(
     tree,
-    template_data: Optional[Dict[str, Any]] = None
+    template_data: Optional[Dict[str, Any]] = None,
+    assets: Optional[Path] = None
 ) -> str:
     """
     Render a scene tree to SVG with optional template background.
@@ -83,6 +86,8 @@ def render_tree_with_template(
     Args:
         tree: Scene tree from rmscene
         template_data: Parsed template JSON data (optional)
+        assets: Directory holding the page's image assets, required if the
+            scene places any images (captures)
 
     Returns:
         SVG content as string
@@ -128,7 +133,7 @@ def render_tree_with_template(
 
     draw_group(
         tree.root, output, anchor_pos, newline_offsets,
-        text_pos_x, anchor_x_pos, anchor_soft_offset
+        text_pos_x, anchor_x_pos, anchor_soft_offset, assets
     )
 
     output.write('\t</g>\n')
@@ -193,7 +198,9 @@ def rm_to_svg_with_template(
     with open(rm_path, 'rb') as f:
         tree = read_tree(f)
 
-    svg_content = render_tree_with_template(tree, template_data)
+    svg_content = render_tree_with_template(
+        tree, template_data, assets=resolve_asset_dir(rm_path)
+    )
 
     with open(svg_path, 'w') as f:
         f.write(svg_content)
@@ -218,7 +225,9 @@ def rm_to_pdf_with_template(
     with open(rm_path, 'rb') as f:
         tree = read_tree(f)
 
-    svg_content = render_tree_with_template(tree, template_data)
+    svg_content = render_tree_with_template(
+        tree, template_data, assets=resolve_asset_dir(rm_path)
+    )
 
     # Convert SVG to pdf
     _svg_to_pdf(svg_content, str(pdf_path), use_chrome=use_chrome,
