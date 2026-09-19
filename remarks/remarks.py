@@ -28,6 +28,7 @@ from .utils import (
     get_visible_name,
     get_ui_path,
     get_page_template,
+    sanitize_filename,
 )
 from .warnings import scrybble_warning_only_v6_supported
 
@@ -73,7 +74,11 @@ def run_remarks(
             logging.info(f'\nFile: "{doc_name} [type={doc_type}]" ({metadata_path.stem})')
 
             in_device_dir = get_ui_path(metadata_path)
-            relative_doc_path = pathlib.Path(f"{in_device_dir}/{doc_name}")
+            # Sanitize the name before it becomes a path: a visibleName may
+            # contain "/" (e.g. a date), which would otherwise be read as
+            # directory separators and scatter the output across nested
+            # directories rather than writing one file.
+            relative_doc_path = pathlib.Path(in_device_dir) / sanitize_filename(doc_name)
 
             process_document(metadata_path, relative_doc_path, output_dir,
                              device=device, templates_dir=templates_dir,

@@ -1,4 +1,3 @@
-import re
 from typing import List
 
 import fitz
@@ -13,7 +12,7 @@ from remarks.utils import (
     is_inserted_page,
     get_pages_data,
     list_ann_rm_files,
-    get_visible_name, is_duplicate_page,
+    get_visible_name, is_duplicate_page, sanitize_filename,
 )
 
 
@@ -126,16 +125,3 @@ class Document:
     def get_page_tags_for_page(self, page_uuid: str) -> List[str]:
         """Get tags for a specific page"""
         return get_page_tags(self.metadata_path, page_uuid)
-
-
-def sanitize_filename(filename: str) -> str:
-    """
-    Sanitizes filenames for smooth usage within Obsidian
-    Obsidian filenames cannot contain the following special tokens:
-    :/\
-    Additionally, Obsidian recommends you not to use these characters in filenames
-    because they will break links:
-    #[]^|
-    Within remarks, we replace these characters with a _
-    """
-    return re.sub(r'[#[\]^|:/\\]', '_', filename)

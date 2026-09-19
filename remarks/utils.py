@@ -35,6 +35,19 @@ def get_visible_name(path):
     return metadata["visibleName"]
 
 
+def sanitize_filename(filename: str) -> str:
+    """
+    Sanitizes filenames for smooth usage within Obsidian
+    Obsidian filenames cannot contain the following special tokens:
+    :/\\
+    Additionally, Obsidian recommends you not to use these characters in filenames
+    because they will break links:
+    #[]^|
+    Within remarks, we replace these characters with a _
+    """
+    return re.sub(r'[#[\]^|:/\\]', '_', filename)
+
+
 def get_ui_path(path):
     metadata = read_meta_file(path)
     parent_filename = metadata["parent"]
@@ -51,7 +64,7 @@ def get_ui_path(path):
         if not metadata:
             return pathlib.Path(".")
 
-        parent_title = metadata["visibleName"]
+        parent_title = sanitize_filename(metadata["visibleName"])
 
         # These go in reverse order up to the top level
         ui_path = pathlib.Path(parent_title).joinpath(ui_path)
